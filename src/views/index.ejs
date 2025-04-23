@@ -1,0 +1,59 @@
+<!-- src/views/index.ejs -->
+<%- include('partials/header', { title: 'Sistema de Gestión de Incidencias' }) %>
+
+<div class="container mt-5">
+  <div class="jumbotron text-center">
+    <h1 class="display-4">Sistema de Gestión de Incidencias</h1>
+    <p class="lead">Bienvenido a la aplicación para gestionar incidencias técnicas del centro educativo</p>
+    <hr class="my-4">
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4>Profesores</h4>
+        </div>
+        <div class="card-body">
+          <p>Como profesor, puedes registrar nuevas incidencias y hacer seguimiento del estado de las mismas.</p>
+          <div class="d-grid gap-2">
+            <a href="/issues/create" class="btn btn-primary">Crear Nueva Incidencia</a>
+            <a href="/issues/track" class="btn btn-outline-primary">Seguimiento de Incidencia</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h4>Administradores</h4>
+        </div>
+        <div class="card-body">
+          <p>Como administrador, puedes ver todas las incidencias, asignarlas y gestionar su prioridad.</p>
+          <div class="d-grid gap-2">
+            <a href="/issues" class="btn btn-success">Gestionar Incidencias</a>
+            <a href="/reports/technicians" class="btn btn-outline-success">Informe de Técnicos</a>
+            <a href="/reports/departments" class="btn btn-outline-success">Informe por Departamentos</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-warning text-dark">
+          <h4>Técnicos</h4>
+        </div>
+        <div class="card-body">
+          <p>Como técnico, puedes gestionar las incidencias asignadas, añadir actuaciones y cerrarlas.</p>
+          <div class="d-grid gap-2">
+            <a href="/issues" class="btn btn-warning">Ver Incidencias Asignadas</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

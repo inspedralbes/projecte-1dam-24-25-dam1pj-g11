@@ -1,0 +1,61 @@
+<!-- src/views/reports/technicians.ejs -->
+<%- include('../partials/header', { title: 'Informe de Técnicos' }) %>
+
+<div class="row">
+  <div class="col-12">
+    <h2>Informe de Técnicos</h2>
+    <p class="text-muted">Estadísticas de trabajo de cada técnico</p>
+    
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Técnico</th>
+                <th>Total Actuaciones</th>
+                <th>Tiempo Total (min)</th>
+                <th>Incidencias Asignadas</th>
+                <th>Incidencias Resueltas</th>
+                <th>% Resolución</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (technicians.length === 0) { %>
+                <tr>
+                  <td colspan="6" class="text-center">No hay técnicos registrados</td>
+                </tr>
+              <% } %>
+              
+              <% technicians.forEach(tech => { %>
+                <tr>
+                  <td><%= tech.fullName %></td>
+                  <td><%= tech.Actions[0].dataValues.totalActions || 0 %></td>
+                  <td><%= tech.Actions[0].dataValues.totalTimeSpent || 0 %></td>
+                  <td><%= tech.AssignedIssues[0].dataValues.totalIssues || 0 %></td>
+                  <td><%= tech.AssignedIssues[0].dataValues.resolvedIssues || 0 %></td>
+                  <td>
+                    <% 
+                      const totalIssues = tech.AssignedIssues[0].dataValues.totalIssues || 0;
+                      const resolvedIssues = tech.AssignedIssues[0].dataValues.resolvedIssues || 0;
+                      const percentage = totalIssues > 0 ? (resolvedIssues / totalIssues) * 100 : 0;
+                    %>
+                    <div class="progress">
+                      <div class="progress-bar bg-success" role="progressbar" 
+                           style="width: <%= percentage %>%;" 
+                           aria-valuenow="<%= percentage %>" aria-valuemin="0" aria-valuemax="100">
+                        <%= percentage.toFixed(0) %>%
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

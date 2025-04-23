@@ -1,0 +1,73 @@
+<!-- src/views/issues/list.ejs -->
+<%- include('../partials/header', { title: 'Gestión de Incidencias' }) %>
+
+<h2>Gestión de Incidencias</h2>
+<p class="text-muted">Listado de incidencias abiertas ordenadas por prioridad</p>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Título</th>
+        <th>Departamento</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+        <th>Prioridad</th>
+        <th>Creada por</th>
+        <th>Técnico</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (issues.length === 0) { %>
+        <tr>
+          <td colspan="9" class="text-center">No hay incidencias abiertas</td>
+        </tr>
+      <% } %>
+      
+      <% issues.forEach(issue => { %>
+        <tr class="<%= issue.priority === 'urgent' ? 'table-danger' : 
+                       issue.priority === 'high' ? 'table-warning' : 
+                       issue.priority === 'medium' ? 'table-info' : 'table-light' %>">
+          <td><%= issue.id %></td>
+          <td><%= issue.title %></td>
+          <td><%= issue.Department ? issue.Department.name : 'N/A' %></td>
+          <td>
+            <% if (issue.type === 'hardware') { %>Hardware<% } %>
+            <% if (issue.type === 'software') { %>Software<% } %>
+            <% if (issue.type === 'network') { %>Red<% } %>
+            <% if (issue.type === 'other') { %>Otro<% } %>
+          </td>
+          <td>
+            <span class="badge <%= issue.status === 'open' ? 'bg-danger' : 
+                                   issue.status === 'in_progress' ? 'bg-warning' : 'bg-success' %>">
+              <%= issue.status === 'open' ? 'Abierta' : 
+                  issue.status === 'in_progress' ? 'En proceso' : 'Cerrada' %>
+            </span>
+          </td>
+          <td>
+            <span class="badge <%= issue.priority === 'urgent' ? 'bg-danger' : 
+                                   issue.priority === 'high' ? 'bg-warning text-dark' : 
+                                   issue.priority === 'medium' ? 'bg-info text-dark' : 'bg-light text-dark' %>">
+              <%= issue.priority === 'urgent' ? 'Urgente' : 
+                  issue.priority === 'high' ? 'Alta' : 
+                  issue.priority === 'medium' ? 'Media' : 'Baja' %>
+            </span>
+          </td>
+          <td><%= issue.Creator ? issue.Creator.fullName : 'N/A' %></td>
+          <td><%= issue.Assignee ? issue.Assignee.fullName : 'Sin asignar' %></td>
+          <td>
+            <div class="btn-group btn-group-sm">
+              <a href="/issues/<%= issue.id %>/edit" class="btn btn-primary">Editar</a>
+              <a href="/issues/<%= issue.id %>/close" class="btn btn-success">Ver</a>
+              <a href="/actions/create/<%= issue.id %>" class="btn btn-warning">+ Actuación</a>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/footer') %>

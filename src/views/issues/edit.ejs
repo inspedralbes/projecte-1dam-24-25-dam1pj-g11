@@ -1,0 +1,70 @@
+<!-- src/views/issues/edit.ejs -->
+<%- include('../partials/header', { title: 'Editar Incidencia' }) %>
+
+<div class="row">
+  <div class="col-lg-8 offset-lg-2">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">Editar Incidencia #<%= issue.id %></h2>
+      </div>
+      <div class="card-body">
+        <form action="/issues/<%= issue.id %>/update" method="POST">
+          <div class="mb-3">
+            <label class="form-label">Título</label>
+            <input type="text" class="form-control" value="<%= issue.title %>" disabled>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" rows="3" disabled><%= issue.description %></textarea>
+          </div>
+          
+          <div class="mb-3">
+            <label for="priority" class="form-label">Prioridad</label>
+            <select class="form-select" id="priority" name="priority" required>
+              <% priorities.forEach(priority => { %>
+                <option value="<%= priority %>" <%= issue.priority === priority ? 'selected' : '' %>>
+                  <%= priority === 'urgent' ? 'Urgente' : 
+                     priority === 'high' ? 'Alta' : 
+                     priority === 'medium' ? 'Media' : 'Baja' %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="type" class="form-label">Tipo</label>
+            <select class="form-select" id="type" name="type" required>
+              <% types.forEach(type => { %>
+                <option value="<%= type %>" <%= issue.type === type ? 'selected' : '' %>>
+                  <%= type === 'hardware' ? 'Hardware' : 
+                     type === 'software' ? 'Software' : 
+                     type === 'network' ? 'Red' : 'Otro' %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="assignedTo" class="form-label">Asignar Técnico</label>
+            <select class="form-select" id="assignedTo" name="assignedTo" required>
+              <option value="">Sin asignar</option>
+              <% technicians.forEach(tech => { %>
+                <option value="<%= tech.id %>" <%= issue.assignedTo === tech.id ? 'selected' : '' %>>
+                  <%= tech.fullName %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+          
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="/issues" class="btn btn-outline-secondary">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
