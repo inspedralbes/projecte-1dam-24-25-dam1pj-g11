@@ -3,43 +3,37 @@ const express = require('express');
 require('dotenv').config();
 const sequelize = require('./db');
 const path = require('path');
-const Motorcycle = require('./models/Motorcycle');
-const Category = require('./models/Category');
 
-// Relacions
-Category.hasMany(Motorcycle, { foreignKey: 'categoryId', onDelete: 'CASCADE' });
-Motorcycle.belongsTo(Category, { foreignKey: 'categoryId' });
+// Modelos
+const Incidencia = require('./models/Incidencia');
 
-// Rutes per API JSON
-const motorcycleRoutes = require('./routes/motorcycles.routes');
-const categoryRoutes = require('./routes/categories.routes');
+// Rutas para API JSON
+const incidenciasRoutes = require('./routes/incidencias.routes');
 
-// Rutes EJS
-const motorcycleRoutesEJS = require('./routes/motorcyclesEJS.routes');
-const categoryRoutesEJS = require('./routes/categoriesEJS.routes');
+// Rutas EJS
+const incidenciasRoutesEJS = require('./routes/incidenciasEJS.routes');
 
 const app = express();
 
-// Middleware per a formularis i JSON
-app.use(express.urlencoded({ extended: true })); // per formularis
-app.use(express.json()); // per JSON
+// Middleware para formularios y JSON
+app.use(express.urlencoded({ extended: true })); // para formularios
+app.use(express.json()); // para JSON
 
-// Configuració de fitxers estàtics
+// Configuración de archivos estáticos
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Rutes EJS
-app.use('/motorcycles', motorcycleRoutesEJS);
-app.use('/categories', categoryRoutesEJS);
+// Rutas EJS
+app.use('/incidencias', incidenciasRoutesEJS);
 
-// Rutes API JSON
-app.use('/api/motorcycles', motorcycleRoutes);
-app.use('/api/categories', categoryRoutes);
+// Rutas API JSON
+app.use('/api/incidencias', incidenciasRoutes);
 
-// Configuració de EJS
+// Configuración de EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Ruta de prova
+// Ruta principal
 app.get('/', (req, res) => {
   res.render('index');
 });
@@ -48,52 +42,51 @@ const port = process.env.PORT || 3000;
 
 (async () => {
   try {
-    // Sincronització de la base de dades amb force: true per reiniciar les taules
+    // Sincronización de la base de datos con force: true para reiniciar las tablas
     await sequelize.sync({ force: true });
-    console.log('Base de dades sincronitzada (API JSON)');
+    console.log('Base de datos sincronizada');
 
-    // Creem categories
-    const catCarretera = await Category.create({ name: 'Carretera' });
-    const catEnduro = await Category.create({ name: 'Enduro' });
-
-    // Creem motos
-    await Motorcycle.create({
-      name: 'CBR 600 RR',
-      brand: 'Honda',
-      cc: 600,
-      country: 'Japan',
-      categoryId: catCarretera.id,
+    // Creamos algunas incidencias de ejemplo
+    await Incidencia.create({
+      titulo: 'PC no enciende',
+      descripcion: 'El ordenador de recepción no enciende desde esta mañana.',
+      estado: 'abierta',
+      prioridad: 'alta',
+      tipo: 'hardware',
+      tecnico: 'Juan Pérez'
     });
 
-    await Motorcycle.create({
-      name: 'Africa Twin',
-      brand: 'Honda',
-      cc: 1000,
-      country: 'Japan',
-      categoryId: catEnduro.id,
+    await Incidencia.create({
+      titulo: 'Problemas con la impresora',
+      descripcion: 'La impresora de la oficina 203 se atasca constantemente.',
+      estado: 'en_proceso',
+      prioridad: 'media',
+      tipo: 'hardware',
+      tecnico: 'María López'
     });
 
-    await Motorcycle.create({
-      name: 'Panigale V4',
-      brand: 'Ducati',
-      cc: 1103,
-      country: 'italy',
-      categoryId: catCarretera.id,
+    await Incidencia.create({
+      titulo: 'Error en aplicación de contabilidad',
+      descripcion: 'La aplicación de contabilidad muestra un error al intentar generar informes mensuales.',
+      estado: 'abierta',
+      prioridad: 'critica',
+      tipo: 'software'
     });
 
-    await Motorcycle.create({
-      name: 'Street Glide',
-      brand: 'Harley-Davidson',
-      cc: 1745,
-      country: 'usa',
-      categoryId: catCarretera.id,
+    await Incidencia.create({
+      titulo: 'Wifi intermitente',
+      descripcion: 'La conexión wifi en la sala de reuniones es intermitente desde ayer.',
+      estado: 'resuelta',
+      prioridad: 'media',
+      tipo: 'red',
+      tecnico: 'Carlos Ruiz'
     });
 
     // Iniciar servidor
     app.listen(port, () => {
-      console.log(`Servidor escoltant a http://localhost:${port}`);
+      console.log(`Servidor escuchando en http://localhost:${port}`);
     });
   } catch (error) {
-    console.error("Error a l'inici:", error);
+    console.error("Error al iniciar:", error);
   }
 })();

@@ -1,0 +1,67 @@
+<!-- src/views/incidencias/new.ejs -->
+<%- include('../partials/header', { title: 'Nueva Incidencia' }) %>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <h1>Crear Nueva Incidencia</h1>
+    <form action="/incidencias/create" method="POST">
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título</label>
+        <input type="text" class="form-control" id="titulo" name="titulo" required>
+      </div>
+      
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="estado" class="form-label">Estado</label>
+            <select class="form-select" id="estado" name="estado" required>
+              <option value="abierta">Abierta</option>
+              <option value="en_proceso">En proceso</option>
+              <option value="resuelta">Resuelta</option>
+              <option value="cerrada">Cerrada</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="prioridad" class="form-label">Prioridad</label>
+            <select class="form-select" id="prioridad" name="prioridad" required>
+              <option value="baja">Baja</option>
+              <option value="media" selected>Media</option>
+              <option value="alta">Alta</option>
+              <option value="critica">Crítica</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo</label>
+            <select class="form-select" id="tipo" name="tipo" required>
+              <option value="hardware">Hardware</option>
+              <option value="software">Software</option>
+              <option value="red">Red</option>
+              <option value="otros">Otros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="tecnico" class="form-label">Técnico asignado</label>
+        <input type="text" class="form-control" id="tecnico" name="tecnico" placeholder="Opcional">
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Crear Incidencia</button>
+      <a href="/incidencias" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

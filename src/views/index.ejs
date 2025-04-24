@@ -1,5 +1,31 @@
 <!-- src/views/index.ejs -->
-<%- include('partials/header', { title: 'Projecte Motos' }) %>
-  <h1>Benvingut al projecte Motos!</h1>
-  <p>Aquesta és la pàgina d’inici, renderitzada amb EJS.</p>
+<%- include('partials/header', { title: 'Sistema de Gestión de Incidencias' }) %>
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h1 class="mb-4">Sistema de Gestión de Incidencias</h1>
+      <p class="lead mb-5">Bienvenido al sistema de gestión de incidencias técnicas. Este sistema te permite registrar, consultar y gestionar todas las incidencias de manera centralizada.</p>
+      
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Gestión de Incidencias</h5>
+              <p class="card-text">Accede al panel de gestión completo de incidencias. Puedes ver, crear, editar y resolver incidencias.</p>
+              <a href="/incidencias" class="btn btn-primary">Gestionar Incidencias</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Nueva Incidencia</h5>
+              <p class="card-text">¿Detectaste un problema? Registra una nueva incidencia para que sea atendida por el equipo técnico.</p>
+              <a href="/incidencias/new" class="btn btn-success">Crear Incidencia</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 <%- include('partials/footer') %>

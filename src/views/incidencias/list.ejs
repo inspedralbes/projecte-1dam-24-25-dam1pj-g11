@@ -1,0 +1,59 @@
+<!-- src/views/incidencias/list.ejs -->
+<%- include('../partials/header', { title: 'Incidencias' }) %>
+
+<div class="row">
+  <div class="col-12">
+    <h1>Listado de Incidencias</h1>
+    <a href="/incidencias/new" class="btn btn-primary mb-3">Nueva Incidencia</a>
+    
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Estado</th>
+          <th>Prioridad</th>
+          <th>Tipo</th>
+          <th>Técnico</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% incidencias.forEach(incidencia => { %>
+          <tr>
+            <td><a href="/incidencias/<%= incidencia.id %>"><%= incidencia.titulo %></a></td>
+            <td>
+              <span class="badge <%= 
+                incidencia.estado === 'abierta' ? 'bg-danger' : 
+                incidencia.estado === 'en_proceso' ? 'bg-warning' : 
+                incidencia.estado === 'resuelta' ? 'bg-success' : 
+                'bg-secondary' 
+              %>">
+                <%= incidencia.estado.replace('_', ' ') %>
+              </span>
+            </td>
+            <td>
+              <span class="badge <%= 
+                incidencia.prioridad === 'baja' ? 'bg-info' : 
+                incidencia.prioridad === 'media' ? 'bg-warning' : 
+                incidencia.prioridad === 'alta' ? 'bg-danger' : 
+                'bg-dark' 
+              %>">
+                <%= incidencia.prioridad %>
+              </span>
+            </td>
+            <td><%= incidencia.tipo %></td>
+            <td><%= incidencia.tecnico || 'Sin asignar' %></td>
+            <td><%= incidencia.fecha.toLocaleDateString() %></td>
+            <td>
+              <a href="/incidencias/<%= incidencia.id %>/edit" class="btn btn-sm btn-warning">Editar</a>
+              <a href="/incidencias/<%= incidencia.id %>/delete" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta incidencia?')">Eliminar</a>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,62 @@
+<!-- src/views/incidencias/edit.ejs -->
+<%- include('../partials/header', { title: 'Editar Incidencia' }) %>
+
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <h1>Editar Incidencia</h1>
+    <form action="/incidencias/<%= incidencia.id %>/update" method="POST">
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título</label>
+        <input type="text" class="form-control" id="titulo" value="<%= incidencia.titulo %>" disabled>
+      </div>
+      
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea class="form-control" id="descripcion" rows="4" disabled><%= incidencia.descripcion %></textarea>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="estado" class="form-label">Estado</label>
+            <input type="text" class="form-control" value="<%= incidencia.estado.replace('_', ' ') %>" disabled>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="prioridad" class="form-label">Prioridad</label>
+            <select class="form-select" id="prioridad" name="prioridad" required>
+              <option value="baja" <%= incidencia.prioridad === 'baja' ? 'selected' : '' %>>Baja</option>
+              <option value="media" <%= incidencia.prioridad === 'media' ? 'selected' : '' %>>Media</option>
+              <option value="alta" <%= incidencia.prioridad === 'alta' ? 'selected' : '' %>>Alta</option>
+              <option value="critica" <%= incidencia.prioridad === 'critica' ? 'selected' : '' %>>Crítica</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo</label>
+            <select class="form-select" id="tipo" name="tipo" required>
+              <option value="hardware" <%= incidencia.tipo === 'hardware' ? 'selected' : '' %>>Hardware</option>
+              <option value="software" <%= incidencia.tipo === 'software' ? 'selected' : '' %>>Software</option>
+              <option value="red" <%= incidencia.tipo === 'red' ? 'selected' : '' %>>Red</option>
+              <option value="otros" <%= incidencia.tipo === 'otros' ? 'selected' : '' %>>Otros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="tecnico" class="form-label">Técnico asignado</label>
+        <input type="text" class="form-control" id="tecnico" name="tecnico" value="<%= incidencia.tecnico || '' %>" placeholder="Opcional">
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Actualizar Incidencia</button>
+      <a href="/incidencias" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
