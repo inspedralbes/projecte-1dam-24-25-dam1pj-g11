@@ -3,149 +3,97 @@ const express = require('express');
 require('dotenv').config();
 const sequelize = require('./db');
 const path = require('path');
+const Motorcycle = require('./models/Motorcycle');
+const Category = require('./models/Category');
 
-// Importar modelos
-const Issue = require('./models/Issue');
-const User = require('./models/User');
-const Department = require('./models/Department');
-const Action = require('./models/Action');
+// Relacions
+Category.hasMany(Motorcycle, { foreignKey: 'categoryId', onDelete: 'CASCADE' });
+Motorcycle.belongsTo(Category, { foreignKey: 'categoryId' });
 
-// Definir relaciones
-Department.hasMany(User, { foreignKey: 'departmentId' });
-User.belongsTo(Department, { foreignKey: 'departmentId' });
+// Rutes per API JSON
+const motorcycleRoutes = require('./routes/motorcycles.routes');
+const categoryRoutes = require('./routes/categories.routes');
 
-Department.hasMany(Issue, { foreignKey: 'departmentId' });
-Issue.belongsTo(Department, { foreignKey: 'departmentId' });
-
-User.hasMany(Issue, { foreignKey: 'createdBy', as: 'CreatedIssues' });
-Issue.belongsTo(User, { foreignKey: 'createdBy', as: 'Creator' });
-
-User.hasMany(Issue, { foreignKey: 'assignedTo', as: 'AssignedIssues' });
-Issue.belongsTo(User, { foreignKey: 'assignedTo', as: 'Assignee' });
-
-Issue.hasMany(Action, { foreignKey: 'issueId' });
-Action.belongsTo(Issue, { foreignKey: 'issueId' });
-
-User.hasMany(Action, { foreignKey: 'technicianId' });
-Action.belongsTo(User, { foreignKey: 'technicianId' });
-
-// Importar rutas
-const issuesRoutesEJS = require('./routes/issuesEJS.routes');
-const usersRoutesEJS = require('./routes/usersEJS.routes');
-const actionsRoutesEJS = require('./routes/actionsEJS.routes');
-const reportsRoutesEJS = require('./routes/reportsEJS.routes');
+// Rutes EJS
+const motorcycleRoutesEJS = require('./routes/motorcyclesEJS.routes');
+const categoryRoutesEJS = require('./routes/categoriesEJS.routes');
 
 const app = express();
 
-// Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+// Middleware per a formularis i JSON
+app.use(express.urlencoded({ extended: true })); // per formularis
+app.use(express.json()); // per JSON
 
-// Configuración EJS
+// Configuració de fitxers estàtics
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
+
+// Rutes EJS
+app.use('/motorcycles', motorcycleRoutesEJS);
+app.use('/categories', categoryRoutesEJS);
+
+// Rutes API JSON
+app.use('/api/motorcycles', motorcycleRoutes);
+app.use('/api/categories', categoryRoutes);
+
+// Configuració de EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Rutas
-app.use('/issues', issuesRoutesEJS);
-app.use('/users', usersRoutesEJS);
-app.use('/actions', actionsRoutesEJS);
-app.use('/reports', reportsRoutesEJS);
-
-// Ruta principal
+// Ruta de prova
 app.get('/', (req, res) => {
   res.render('index');
 });
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-// Iniciar servidor
 (async () => {
   try {
-    await sequelize.sync({ force: true }); // En producción cambiar a force: false
-    console.log('Base de datos sincronizada');
+    // Sincronització de la base de dades amb force: true per reiniciar les taules
+    await sequelize.sync({ force: true });
+    console.log('Base de dades sincronitzada (API JSON)');
 
-    // Crear datos iniciales
-    const deptInformatica = await Department.create({ 
-      name: 'Informática', 
-      description: 'Departamento de informática y tecnología' 
-    });
-    
-    const deptMath = await Department.create({ 
-      name: 'Matemáticas', 
-      description: 'Departamento de matemáticas' 
-    });
+    // Creem categories
+    const catCarretera = await Category.create({ name: 'Carretera' });
+    const catEnduro = await Category.create({ name: 'Enduro' });
 
-    // Crear usuarios de prueba
-    const admin = await User.create({
-      username: 'admin',
-      password: 'admin123', // En producción usar hash
-      fullName: 'Administrador',
-      email: 'admin@example.com',
-      role: 'admin',
-      departmentId: deptInformatica.id
+    // Creem motos
+    await Motorcycle.create({
+      name: 'CBR 600 RR',
+      brand: 'Honda',
+      cc: 600,
+      country: 'Japan',
+      categoryId: catCarretera.id,
     });
 
-    const technician = await User.create({
-      username: 'tecnico',
-      password: 'tecnico123', // En producción usar hash
-      fullName: 'Técnico Soporte',
-      email: 'tecnico@example.com',
-      role: 'technician',
-      departmentId: deptInformatica.id
+    await Motorcycle.create({
+      name: 'Africa Twin',
+      brand: 'Honda',
+      cc: 1000,
+      country: 'Japan',
+      categoryId: catEnduro.id,
     });
 
-    const teacher = await User.create({
-      username: 'profesor',
-      password: 'profesor123', // En producción usar hash
-      fullName: 'Profesor Ejemplo',
-      email: 'profesor@example.com',
-      role: 'teacher',
-      departmentId: deptMath.id
+    await Motorcycle.create({
+      name: 'Panigale V4',
+      brand: 'Ducati',
+      cc: 1103,
+      country: 'italy',
+      categoryId: catCarretera.id,
     });
 
-    // Crear incidencias de ejemplo
-    const issue1 = await Issue.create({
-      title: 'Problema con proyector',
-      description: 'El proyector del aula 101 no enciende',
-      status: 'open',
-      priority: 'high',
-      type: 'hardware',
-      createdBy: teacher.id,
-      departmentId: teacher.departmentId,
-      assignedTo: technician.id
+    await Motorcycle.create({
+      name: 'Street Glide',
+      brand: 'Harley-Davidson',
+      cc: 1745,
+      country: 'usa',
+      categoryId: catCarretera.id,
     });
 
-    const issue2 = await Issue.create({
-      title: 'Software no funciona',
-      description: 'El software de matemáticas no se instala correctamente',
-      status: 'in_progress',
-      priority: 'medium',
-      type: 'software',
-      createdBy: teacher.id,
-      departmentId: teacher.departmentId,
-      assignedTo: technician.id
-    });
-
-    // Crear actuaciones de ejemplo
-    await Action.create({
-      description: 'Se revisó el proyector y se verificó que está conectado correctamente',
-      technicianId: technician.id,
-      issueId: issue1.id,
-      timeSpent: 30
-    });
-
-    await Action.create({
-      description: 'Se intentó reinstalar el software sin éxito. Se contactará al proveedor.',
-      technicianId: technician.id,
-      issueId: issue2.id,
-      timeSpent: 45
-    });
-
-    app.listen(PORT, () => {
-      console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+    // Iniciar servidor
+    app.listen(port, () => {
+      console.log(`Servidor escoltant a http://localhost:${port}`);
     });
   } catch (error) {
-    console.error('Error al iniciar la aplicación:', error);
+    console.error("Error a l'inici:", error);
   }
 })();
