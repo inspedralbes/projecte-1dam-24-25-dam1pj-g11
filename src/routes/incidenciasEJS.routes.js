@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Incidencia = require('../models/Incidencia');
+const Acto = require('../models/Acto');
 
 // Listar incidencias (GET)
 router.get('/', async (req, res) => {
@@ -45,8 +46,16 @@ router.get('/:id', async (req, res) => {
     try {
         const incidencia = await Incidencia.findByPk(req.params.id);
         if (!incidencia) return res.status(404).send('Incidencia no encontrada');
-        res.render('incidencias/detail', { incidencia });
+        
+        // Obtener actos asociados a esta incidencia
+        const actos = await Acto.findAll({
+            where: { IncidenciaId: req.params.id },
+            order: [['fecha', 'DESC']]
+        });
+        
+        res.render('incidencias/detail', { incidencia, actos });
     } catch (error) {
+        console.error(error);
         res.status(500).send('Error al cargar los detalles de la incidencia');
     }
 });

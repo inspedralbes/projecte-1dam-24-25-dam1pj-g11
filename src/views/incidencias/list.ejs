@@ -47,6 +47,7 @@
             <td><%= incidencia.fecha.toLocaleDateString() %></td>
             <td>
               <a href="/incidencias/<%= incidencia.id %>/edit" class="btn btn-sm btn-warning">Editar</a>
+              <a href="/incidencias/<%= incidencia.id %>" class="btn btn-sm btn-info">Actos</a>
               <a href="/incidencias/<%= incidencia.id %>/delete" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta incidencia?')">Eliminar</a>
             </td>
           </tr>
