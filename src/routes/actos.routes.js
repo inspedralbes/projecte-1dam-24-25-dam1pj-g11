@@ -5,7 +5,6 @@ const Acto = require('../models/Acto');
 const Incidencia = require('../models/Incidencia');
 
 // Añadir un nuevo acto a una incidencia
-// Cambiamos la ruta para que sea exactamente como se llama desde el formulario
 router.post('/incidencias/:incidenciaId/actos', async (req, res) => {
     try {
         const { incidenciaId } = req.params;
