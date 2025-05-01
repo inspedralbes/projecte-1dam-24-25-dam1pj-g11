@@ -47,11 +47,13 @@ router.get('/:id', async (req, res) => {
 // UPDATE
 router.put('/:id', async (req, res) => {
     try {
-        const { prioridad, tipo, tecnico } = req.body;
+        const { estado, prioridad, tipo, tecnico } = req.body;
         const incidencia = await Incidencia.findByPk(req.params.id);
         
         if (!incidencia) return res.status(404).json({ error: 'Incidencia no encontrada' });
         
+        // Permitir la actualización del estado también
+        incidencia.estado = estado;
         incidencia.prioridad = prioridad;
         incidencia.tipo = tipo;
         incidencia.tecnico = tecnico;

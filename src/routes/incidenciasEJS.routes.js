@@ -82,10 +82,12 @@ router.get('/:id/edit', async (req, res) => {
 // Actualizar incidencia (POST)
 router.post('/:id/update', async (req, res) => {
     try {
-        const { prioridad, tipo, tecnico } = req.body;
+        const { estado, prioridad, tipo, tecnico } = req.body;
         const incidencia = await Incidencia.findByPk(req.params.id);
         if (!incidencia) return res.status(404).send('Incidencia no encontrada');
         
+        // Actualizar también el estado de la incidencia
+        incidencia.estado = estado; 
         incidencia.prioridad = prioridad;
         incidencia.tipo = tipo;
         incidencia.tecnico = tecnico;

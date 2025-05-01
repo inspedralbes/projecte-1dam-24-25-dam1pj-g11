@@ -19,7 +19,12 @@
         <div class="col-md-4">
           <div class="mb-3">
             <label for="estado" class="form-label">Estado</label>
-            <input type="text" class="form-control" value="<%= incidencia.estado.replace('_', ' ') %>" disabled>
+            <select class="form-select" id="estado" name="estado" required>
+              <option value="abierta" <%= incidencia.estado === 'abierta' ? 'selected' : '' %>>Abierta</option>
+              <option value="en_proceso" <%= incidencia.estado === 'en_proceso' ? 'selected' : '' %>>En proceso</option>
+              <option value="resuelta" <%= incidencia.estado === 'resuelta' ? 'selected' : '' %>>Resuelta</option>
+              <option value="cerrada" <%= incidencia.estado === 'cerrada' ? 'selected' : '' %>>Cerrada</option>
+            </select>
           </div>
         </div>
         
