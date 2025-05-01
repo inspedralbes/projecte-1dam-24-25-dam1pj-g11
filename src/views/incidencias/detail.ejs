@@ -47,50 +47,6 @@
         <a href="/incidencias/<%= incidencia.id %>/delete" class="btn btn-danger float-end" onclick="return confirm('¿Seguro que deseas eliminar esta incidencia?')">Eliminar</a>
       </div>
     </div>
-    
-    <!-- Sección de Actos -->
-    <div class="card">
-      <div class="card-header">
-        <% const listaActos = typeof actos !== 'undefined' ? actos : []; %>
-        <h3>Actos realizados (<%= listaActos.length %>/3)</h3>
-      </div>
-      <div class="card-body">
-        <% if (listaActos.length === 0) { %>
-          <p class="text-muted">No hay actos registrados para esta incidencia.</p>
-        <% } else { %>
-          <div class="list-group">
-            <% listaActos.forEach(acto => { %>
-              <div class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">Acto del <%= new Date(acto.fecha).toLocaleDateString() %></h5>
-                  <a href="/actos/<%= acto.id %>/delete" class="btn btn-sm btn-danger" 
-                     onclick="return confirm('¿Seguro que deseas eliminar este acto?')">
-                    <i class="bi bi-trash"></i> Eliminar
-                  </a>
-                </div>
-                <p class="mb-1"><%= acto.descripcion %></p>
-                <small>Responsable: <%= acto.responsable %></small>
-              </div>
-            <% }); %>
-          </div>
-        <% } %>
-        
-        <% if (listaActos.length < 3) { %>
-          <!-- Modificamos la acción del formulario para asegurarnos de que coincida con la ruta definida -->
-          <form action="/incidencias/<%= incidencia.id %>/actos" method="POST" class="mt-3">
-            <div class="mb-3">
-              <label for="descripcion" class="form-label">Nuevo acto</label>
-              <textarea class="form-control" id="descripcion" name="descripcion" rows="2" required placeholder="Describa la acción realizada"></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="responsable" class="form-label">Responsable</label>
-              <input type="text" class="form-control" id="responsable" name="responsable" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Añadir acto</button>
-          </form>
-        <% } %>
-      </div>
-    </div>
   </div>
 </div>
 

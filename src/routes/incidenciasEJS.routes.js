@@ -1,8 +1,7 @@
-// src/routes/incidenciasEJS.routes.js
+// src/routes/incidenciasEJS.routes.js modificado
 const express = require('express');
 const router = express.Router();
 const Incidencia = require('../models/Incidencia');
-const Acto = require('../models/Acto');
 
 // Listar incidencias (GET)
 router.get('/', async (req, res) => {
@@ -10,6 +9,7 @@ router.get('/', async (req, res) => {
         const incidencias = await Incidencia.findAll();
         res.render('incidencias/list', { incidencias });
     } catch (error) {
+        console.error(error);
         res.status(500).send('Error al recuperar incidencias');
     }
 });
@@ -19,6 +19,7 @@ router.get('/new', async (req, res) => {
     try {
         res.render('incidencias/new');
     } catch (error) {
+        console.error(error);
         res.status(500).send('Error al cargar el formulario');
     }
 });
@@ -37,6 +38,7 @@ router.post('/create', async (req, res) => {
         });
         res.redirect('/incidencias'); // Vuelve al listado
     } catch (error) {
+        console.error(error);
         res.status(500).send('Error al crear la incidencia');
     }
 });
@@ -44,19 +46,24 @@ router.post('/create', async (req, res) => {
 // Ver detalles de una incidencia (GET)
 router.get('/:id', async (req, res) => {
     try {
+        // Intenta primero encontrar la incidencia y loguea el resultado
+        console.log(`Buscando incidencia con ID: ${req.params.id}`);
         const incidencia = await Incidencia.findByPk(req.params.id);
-        if (!incidencia) return res.status(404).send('Incidencia no encontrada');
         
-        // Obtener actos asociados a esta incidencia
-        const actos = await Acto.findAll({
-            where: { IncidenciaId: req.params.id },
-            order: [['fecha', 'DESC']]
+        if (!incidencia) {
+            console.log(`Incidencia con ID ${req.params.id} no encontrada`);
+            return res.status(404).send('Incidencia no encontrada');
+        }
+        
+        console.log(`Incidencia encontrada: ${JSON.stringify(incidencia)}`);
+        
+        // Renderizar la vista con los datos
+        res.render('incidencias/detail', { 
+            incidencia
         });
-        
-        res.render('incidencias/detail', { incidencia, actos });
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al cargar los detalles de la incidencia');
+        console.error('Error al cargar los detalles de la incidencia:', error);
+        res.status(500).send(`Error al cargar los detalles de la incidencia: ${error.message}`);
     }
 });
 
@@ -67,6 +74,7 @@ router.get('/:id/edit', async (req, res) => {
         if (!incidencia) return res.status(404).send('Incidencia no encontrada');
         res.render('incidencias/edit', { incidencia });
     } catch (error) {
+        console.error(error);
         res.status(500).send('Error al cargar el formulario de edición');
     }
 });
@@ -85,6 +93,7 @@ router.post('/:id/update', async (req, res) => {
         await incidencia.save();
         res.redirect('/incidencias');
     } catch (error) {
+        console.error(error);
         res.status(500).send('Error al actualizar la incidencia');
     }
 });
@@ -94,9 +103,13 @@ router.get('/:id/delete', async (req, res) => {
     try {
         const incidencia = await Incidencia.findByPk(req.params.id);
         if (!incidencia) return res.status(404).send('Incidencia no encontrada');
+        
+        // Eliminar la incidencia
         await incidencia.destroy();
+        
         res.redirect('/incidencias');
     } catch (error) {
+        console.error(error);
         res.status(500).send('Error al eliminar la incidencia');
     }
 });
