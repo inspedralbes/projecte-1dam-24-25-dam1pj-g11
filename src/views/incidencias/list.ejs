@@ -47,8 +47,38 @@
             <td><%= incidencia.fecha.toLocaleDateString() %></td>
             <td>
               <a href="/incidencias/<%= incidencia.id %>/edit" class="btn btn-sm btn-warning">Editar</a>
-              </a>
+              <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#actoModal<%= incidencia.id %>">
+                Actos
+              </button>
               <a href="/incidencias/<%= incidencia.id %>/delete" class="btn btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar esta incidencia?')">Eliminar</a>
+              
+              <!-- Modal para registrar acto técnico -->
+              <div class="modal fade" id="actoModal<%= incidencia.id %>" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <form action="/incidencias/<%= incidencia.id %>/actos" method="POST">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Registrar acto técnico</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <label for="tecnico<%= incidencia.id %>" class="form-label">Técnico</label>
+                          <input type="text" class="form-control" id="tecnico<%= incidencia.id %>" name="tecnico" value="<%= incidencia.tecnico || '' %>" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="descripcion<%= incidencia.id %>" class="form-label">Descripción del acto realizado</label>
+                          <textarea class="form-control" id="descripcion<%= incidencia.id %>" name="descripcion" rows="4" required></textarea>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
         <% }); %>

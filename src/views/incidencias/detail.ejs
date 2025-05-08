@@ -1,3 +1,4 @@
+<!-- src/views/incidencias/detail.ejs -->
 <%- include('../partials/header', { title: 'Detalle de Incidencia' }) %>
 
 <div class="row">
@@ -40,12 +41,65 @@
         </div>
         
         <p class="mt-3"><strong>Técnico asignado:</strong> <%= incidencia.tecnico || 'Sin asignar' %></p>
+        
+        <!-- Sección de actos técnicos -->
+        <div class="mt-4">
+          <h5>Historial de acciones técnicas:</h5>
+          <% if (actos && actos.length > 0) { %>
+            <div class="list-group">
+              <% actos.forEach(acto => { %>
+                <div class="list-group-item">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1"><%= acto.tecnico %></h6>
+                    <small><%= acto.fecha.toLocaleString() %></small>
+                  </div>
+                  <p class="mb-1"><%= acto.descripcion %></p>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <p class="text-muted">No hay acciones registradas para esta incidencia.</p>
+          <% } %>
+          
+          <!-- Botón para agregar nuevo acto técnico -->
+          <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#actoModal">
+            <i class="bi bi-tools"></i> Registrar acción
+          </button>
+        </div>
       </div>
       <div class="card-footer">
         <a href="/incidencias/<%= incidencia.id %>/edit" class="btn btn-warning">Editar</a>
         <a href="/incidencias" class="btn btn-secondary">Volver al listado</a>
         <a href="/incidencias/<%= incidencia.id %>/delete" class="btn btn-danger float-end" onclick="return confirm('¿Seguro que deseas eliminar esta incidencia?')">Eliminar</a>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para registrar nuevo acto técnico -->
+<div class="modal fade" id="actoModal" tabindex="-1" aria-labelledby="actoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/incidencias/<%= incidencia.id %>/actos" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title" id="actoModalLabel">Registrar acción técnica</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="tecnico" class="form-label">Técnico</label>
+            <input type="text" class="form-control" id="tecnico" name="tecnico" value="<%= incidencia.tecnico || '' %>" required>
+          </div>
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción de la acción realizada</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
